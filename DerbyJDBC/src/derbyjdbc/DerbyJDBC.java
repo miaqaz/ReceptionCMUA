@@ -32,7 +32,7 @@ public class DerbyJDBC {
     String name = rs.getString(2);
     System.out.println("id="+id+";name="+name);
     }
-    } catch(Exception e){
+    } catch(ClassNotFoundException | SQLException e){
     e.printStackTrace();
 }
     }
