@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sat Nov 01 18:37:34 CST 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.3.0 - (1405108): instance a816c00e-0149-6a65-26ef-0000035d4d20 
+on database directory /Users/zhangmin10/NetBeansProjects/DerbyJDBC/abc  with class loader sun.misc.Launcher$ExtClassLoader@23b561a2 
+Loaded from file:/Library/Java/Extensions/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.7.0_51-b13
+user.dir=/Users/zhangmin10/NetBeansProjects/DerbyJDBC
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.9.5
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
