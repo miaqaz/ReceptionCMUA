@@ -24,7 +24,7 @@ public class DerbyJDBC {
     Class.forName(driver);
     Connection conn = DriverManager.getConnection(dbURL);//启动嵌入式数据库
     Statement st = conn.createStatement();
-    st.execute("create table foo (FOOID INT NOT NULL,FOONAME VARCHAR(30) NOT NULL)");//创建foo表
+    st.execute("create table ioo (FOOID INT NOT NULL,FOONAME VARCHAR(30) NOT NULL)");//创建foo表
     st.executeUpdate("insert into foo(FOOID,FOONAME) values (1,'chinajash')");//插入一条数据
     ResultSet rs = st.executeQuery("select * from foo");//读取刚插入的数据
     while(rs.next()){
