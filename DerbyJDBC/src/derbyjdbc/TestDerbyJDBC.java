@@ -16,6 +16,8 @@ public class TestDerbyJDBC {
 
     /**
      * @param args the command line arguments
+     * @throws java.text.ParseException
+     * @throws java.sql.SQLException
      */
     public static void main(String[] args) throws ParseException, SQLException {
     

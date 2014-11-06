@@ -20,7 +20,10 @@ public class Database {
 
     
     
-    //connect to the database
+    
+    /**
+     * Connect to Database
+     */
     public void connectDB (){
         
         String driver ="org.apache.derby.jdbc.ClientDriver";
@@ -38,6 +41,10 @@ public class Database {
         }
     }
     
+    /**
+     * Disconnect to the database
+     * @throws SQLException 
+     */
     public void disconnectDB() throws SQLException{
         conn.close();
         System.out.println("Database disconnected");
@@ -51,8 +58,9 @@ public class Database {
      * @param gender F or M
      * @param program
      * @param DOB "yyyy-MM-dd"
-     * @param lastVisit "yyyy-MM-dd"
      * @param photo 
+     * @throws java.text.ParseException 
+     * @throws java.sql.SQLException 
      */
     public void addNewStudent(String firstName, String lastName, String gender, 
         String program, String DOB, String photo) throws ParseException, SQLException{        
@@ -93,6 +101,7 @@ public class Database {
      * @param id
      * @return a student record in the following order: id, firstName, lastName,
      *          gender, program, DOB, lastVisit, numOfVisit, photo
+     * @throws java.sql.SQLException
      */
     public String[] getStudentRecord(int id) throws SQLException{
         
@@ -127,6 +136,7 @@ public class Database {
      * and increase number of visit by 1
      * 
      * @param id 
+     * @throws java.sql.SQLException 
      */
     public void updateStudentRecord(int id) throws SQLException{
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
@@ -212,6 +222,8 @@ public class Database {
      * 
      * @param program
      * @param content
+     * @throws java.text.ParseException
+     * @throws java.sql.SQLException
       
      */
     public void addNewAnncmt(String program, String content) throws ParseException, SQLException{        
@@ -245,6 +257,7 @@ public class Database {
      * 
      * @param program
      * @return an announcement record in the following order: anncmtId, program, content
+     * @throws java.sql.SQLException
      */
     public String[] getAnncmtRecord(String program) throws SQLException{
         
