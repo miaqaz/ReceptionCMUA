@@ -164,16 +164,20 @@ public class Database {
     /**
      * add new visit event
      * 
-     * @param id
-     * @param visitDate
+     * @param id student id
      * @param reason 
+     * @throws java.sql.SQLException 
      */
-    public void addVisit(String id, String visitDate, String reason ){
-        
-      
-    
-    
-    
+    public void addVisit(int id, String reason ) throws SQLException {
+        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date currentDate = new java.util.Date();
+            String visitDate = format.format(currentDate);
+            
+            String sql =  "insert into visit values("+ id + ",'" + visitDate + "','" + reason + "')" ;
+            stmt.executeUpdate(sql);
+            System.out.println("Succesfully add a new visit event");
+            stmt.close();
     }
     
     public String[] getVisitRecord(String visitDate) throws SQLException{

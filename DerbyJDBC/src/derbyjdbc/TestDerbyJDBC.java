@@ -30,6 +30,8 @@ public class TestDerbyJDBC {
     
     db.addNewAnncmt(program, "Please do not skip classes!");
     String[] anncmt = db.getAnncmtRecord(program);
+    db.addVisit(1, "Ask for help");
+    
     for (int i = 0; i<anncmt.length;i++){
     
         System.out.println(anncmt[i]);
