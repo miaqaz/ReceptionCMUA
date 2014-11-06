@@ -30,6 +30,8 @@ public class TestDerbyJDBC {
  
     db.addNewStudent(firstName, lastName, gender, program, DOB, photo);
     
+    db.addVisit(1, "Ask for help");
+    
     String[] s = db.getStudentRecord(1);
     for (int i = 0; i<s.length;i++){
     
