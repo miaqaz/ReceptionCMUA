@@ -28,9 +28,20 @@ public class TestDerbyJDBC {
     String DOB = "1990-10-27";
     String photo = "abc.jepg";
     
+    db.addVisit(1, "Ask for help");
+    String[] visit = db.getVisitRecord("2014-11-06");
+    for (int i = 0; i<visit.length;i++){
+    
+        System.out.println(visit[i]);
+    }
+    
+    
+    
+    
     db.addNewAnncmt(program, "Please do not skip classes!");
     String[] anncmt = db.getAnncmtRecord(program);
-    db.addVisit(1, "Ask for help");
+    
+    
     
     for (int i = 0; i<anncmt.length;i++){
     
