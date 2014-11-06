@@ -27,6 +27,13 @@ public class TestDerbyJDBC {
     String program = "MISM";
     String DOB = "1990-10-27";
     String photo = "abc.jepg";
+    
+    db.addNewAnncmt(program, "Please do not skip classes!");
+    String[] anncmt = db.getAnncmtRecord(program);
+    for (int i = 0; i<anncmt.length;i++){
+    
+        System.out.println(anncmt[i]);
+    }
  
     db.addNewStudent(firstName, lastName, gender, program, DOB, photo);
     

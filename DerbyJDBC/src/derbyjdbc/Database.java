@@ -176,4 +176,96 @@ public class Database {
     
     }
     
+    public String[] getVisitRecord(String visitDate) throws SQLException{
+        
+        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
+        String[] visitRecord = new String[3];    
+        String sql = "select * from visit where visitDate = '" + visitDate +"'" ;
+        
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()){
+                for (int i =0; i < visitRecord.length; i++){
+                    
+                    visitRecord[i] = rs.getString(i+1);
+                }
+            }
+            System.out.println("Succesfully get a visit record");
+ 
+        } catch (SQLException ex) {
+            System.out.println("Failed to get a new visit record");
+            ex.printStackTrace();
+        } finally{
+            stmt.close();
+        }
+
+        return visitRecord;    
+    
+    }  
+    /**
+     * Insert a new announcement record
+     * 
+     * 
+     * @param program
+     * @param content
+      
+     */
+    public void addNewAnncmt(String program, String content) throws ParseException, SQLException{        
+            Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
+            String sqlCount = "select * from announcement";
+            
+            
+        try {        
+            ResultSet rs = stmt.executeQuery(sqlCount);
+            rs.last();
+            int count = rs.getRow();
+            int anncmtId = count +1;
+            
+            String sql = "insert into announcement " 
+                    + "values(" + anncmtId + ",'" + program + "','"+ content + "')";
+         
+                stmt.executeUpdate(sql);
+                System.out.println("Succesfully add a new announcement record");
+
+        } catch (SQLException ex) {
+            System.out.println("Failed to add a new announcement record");
+            ex.printStackTrace();
+        } finally {
+            stmt.close();
+        }
+    }
+    
+    
+    /**
+     * Get a string record of an announcement by program
+     * 
+     * @param program
+     * @return an announcement record in the following order: anncmtId, program, content
+     */
+    public String[] getAnncmtRecord(String program) throws SQLException{
+        
+        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
+        String[] anncmtRecord = new String[3];     
+        String sql = "select * from announcement where program = '" + program + "'" ;
+        
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()){
+                for (int i =0; i < anncmtRecord.length; i++){
+                    
+                    anncmtRecord[i] = rs.getString(i+1);
+                }
+            }
+            System.out.println("Succesfully get an annoucement record");
+ 
+        } catch (SQLException ex) {
+            System.out.println("Failed to get a new announcement record");
+            ex.printStackTrace();
+        } finally{
+            stmt.close();
+        }
+
+        return anncmtRecord;    
+    
+    }   
 }
