@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
  */
 public class Database {
     private Connection conn;
-    //private Statement stmt;
+
     
     
     //connect to the database
@@ -50,8 +50,8 @@ public class Database {
      * @param lastName
      * @param gender F or M
      * @param program
-     * @param DOB "dd-MM-yyyy"
-     * @param lastVisit "dd-MM-yyyy"
+     * @param DOB "yyyy-MM-dd"
+     * @param lastVisit "yyyy-MM-dd"
      * @param photo 
      */
     public void addNewStudent(String firstName, String lastName, String gender, 
