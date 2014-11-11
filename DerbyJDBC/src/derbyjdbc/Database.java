@@ -190,6 +190,13 @@ public class Database {
             stmt.close();
     }
     
+    /**
+     * Get visit record by visit date
+     * 
+     * @param visitDate
+     * @return
+     * @throws SQLException 
+     */
     public String[] getVisitRecord(String visitDate) throws SQLException{
         
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
@@ -216,17 +223,20 @@ public class Database {
         return visitRecord;    
     
     }  
+    
     /**
      * Insert a new announcement record
      * 
      * 
      * @param program
      * @param content
+     * @param startDate
+     * @param endDate
      * @throws java.text.ParseException
      * @throws java.sql.SQLException
       
      */
-    public void addNewAnncmt(String program, String content) throws ParseException, SQLException{        
+    public void addNewAnncmt(String program, String content, String startDate, String endDate) throws ParseException, SQLException{        
             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
             String sqlCount = "select * from announcement";
             
