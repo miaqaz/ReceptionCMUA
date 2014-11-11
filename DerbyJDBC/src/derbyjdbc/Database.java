@@ -120,7 +120,7 @@ public class Database {
             System.out.println("Succesfully get a student record");
  
         } catch (SQLException ex) {
-            System.out.println("Failed to add a new student record");
+            System.out.println("Failed to get a new student record");
             ex.printStackTrace();
         } finally{
             stmt.close();
