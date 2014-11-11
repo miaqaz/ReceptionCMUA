@@ -40,7 +40,7 @@ public class TestDerbyJDBC {
     
     
     
-    db.addNewAnncmt(program, "Please do not skip classes!");
+    db.addNewAnncmt(program, "Please do not skip classes!","2014-10-01","2014-11-01");
     String[] anncmt = db.getAnncmtRecord(program);
     
     
