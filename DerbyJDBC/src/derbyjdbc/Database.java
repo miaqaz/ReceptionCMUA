@@ -8,7 +8,8 @@ package derbyjdbc;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
+
 
 
 
@@ -99,13 +100,14 @@ public class Database {
     /**
      * Get a string record of a student by student id
      * 
-     * @param id
-     * @return a student record in the following order: id, firstName, lastName,
+     * @param stringId
+     * @return null if no record found or a student record in the following order: id, firstName, lastName,
      *          gender, program, DOB, lastVisit, numOfVisit, photo
      * @throws java.sql.SQLException
      */
-    public String[] getStudentRecord(int id) throws SQLException{
+    public String[] getStudentRecord(String stringId) throws SQLException{
         
+        int id = Integer.parseInt(stringId);
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
         String[] studentRecord = new String[9];    
         String sql = "select * from student where id = " + id ;
@@ -113,22 +115,21 @@ public class Database {
         try {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()){
+                
                 for (int i =0; i < studentRecord.length; i++){
                     
                     studentRecord[i] = rs.getString(i+1);
                 }
             }
-            System.out.println("Succesfully get a student record");
- 
+            System.out.println("Succesfully get a student record by student id: " + id);
+            return studentRecord;   
         } catch (SQLException ex) {
-            System.out.println("Failed to get a new student record");
+            System.out.println("Failed to get a new student record by student id: " + id);
             ex.printStackTrace();
         } finally{
             stmt.close();
         }
-
-        return studentRecord;    
-    
+        return null;        
     }   
     
     
@@ -136,10 +137,11 @@ public class Database {
      * Update student record by id, update date of last visit 
      * and increase number of visit by 1
      * 
-     * @param id 
+     * @param stringId 
      * @throws java.sql.SQLException 
      */
-    public void updateStudentRecord(int id) throws SQLException{
+    public void updateStudentRecord(String stringId) throws SQLException{
+        int id = Integer.parseInt(stringId);
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date currentDate = new java.util.Date();    
@@ -161,12 +163,12 @@ public class Database {
                 
                 
                 stmt.executeUpdate(sql);
-                System.out.println("Succesfully update a student record");
+                System.out.println("Succesfully update a student record by student id: " + id);
             }
             
             
         } catch (SQLException ex) {
-            System.out.println("Failed to update a student record");
+            System.out.println("Failed to update a student record by student id: " + id);
             ex.printStackTrace();
         } finally{
             stmt.close();
@@ -183,52 +185,56 @@ public class Database {
      */
     public void addVisit(int id, String reason ) throws SQLException {
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date currentDate = new java.util.Date();
-            String visitDate = format.format(currentDate);
-            
-            String sql =  "insert into visit values("+ id + ",'" + visitDate + "','" + reason + "')" ;
-            stmt.executeUpdate(sql);
-            System.out.println("Succesfully add a new visit event");
-            stmt.close();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date currentDate = new java.util.Date();
+        String visitDate = format.format(currentDate);
+
+        String sql =  "insert into visit values("+ id + ",'" + visitDate + "','" + reason + "')" ;
+        stmt.executeUpdate(sql);
+        System.out.println("Succesfully add a new visit event");
+        stmt.close();
     }
     
     /**
      * Get visit record by visit date
      * 
      * @param visitDate
-     * @return
+     * @return null if no record found or all visit records on that date in the order of: id, visitDate, Reason
      * @throws SQLException 
      */
-    public String[][] getVisitRecord(String visitDate) throws SQLException{
+    public String[][] getVisitRecord(String visitDate) throws SQLException {
         
-        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);   
+        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         String sql = "select * from visit where visitDate = '" + visitDate +"'" ;
-
-            ResultSet rs = stmt.executeQuery(sql);
-            if (!rs.next()){
-             System.out.println("No visit record on " + visitDate); 
-             String[][] noVisitRecord = new String[][]{{"No visit record on " + visitDate}};
-             stmt.close();
-             return noVisitRecord;
-            }
-            else {
-            rs.last();
-            int numOfRows = rs.getRow();
-            rs.beforeFirst();
-            String[][] visitRecord = new String[numOfRows][3];  
-            while (rs.next()){
-               for (int i =0; i < visitRecord.length; i++){
-                   for (int j =0; j<visitRecord[i].length; j++)
-                    visitRecord[i][j] = rs.getString(j+1);
-                }
-            }
-            System.out.println("Succesfully get all visit records on " + visitDate); 
+        
+        try {   
+             ResultSet rs = stmt.executeQuery(sql); 
+             rs.last();
+             int numOfRows = rs.getRow();
+             rs.beforeFirst();
+             String[][] visitRecord = new String[numOfRows][3];
+             while (rs.next()){
+                 for (int i =0; i < visitRecord.length; i++){
+                     for (int j =0; j < visitRecord[i].length; j++){
+                         visitRecord[i][j] = rs.getString(j+1);
+                 }
+                rs.next();
+             }
+             }
+             System.out.println("Succesfully get all visit records on " + visitDate); 
+             return visitRecord;
+             
+         } catch (SQLException ex) {
+             System.out.println("Failed to get visit records on " + visitDate);
+             ex.printStackTrace();
+         } finally {
             stmt.close();
-            return visitRecord;
-            }
+        }
+ 
+        return null;
+    }
    
-    }  
+    
     
     /**
      * Insert a new announcement record
@@ -247,6 +253,7 @@ public class Database {
             String sqlCount = "select * from announcement";
             
             
+            
         try {        
             ResultSet rs = stmt.executeQuery(sqlCount);
             rs.last();
@@ -254,8 +261,7 @@ public class Database {
             int anncmtId = count +1;
             
             String sql = "insert into announcement " 
-                    + "values(" + anncmtId + ",'" + program + "','"+ content + "')";
-         
+                    + "values(" + anncmtId + ",'" + program + "','"+ content +"','" + startDate + "','"+ endDate + "')";         
                 stmt.executeUpdate(sql);
                 System.out.println("Succesfully add a new announcement record");
 
@@ -269,36 +275,42 @@ public class Database {
     
     
     /**
-     * Get a string record of an announcement by program
+     * Get a string record of announcement records by program
      * 
      * @param program
-     * @return an announcement record in the following order: anncmtId, program, content
+     * @return null if no record found or an announcement record 
+     *         in the following order: anncmtId, program, content, startDate, endDate
      * @throws java.sql.SQLException
      */
-    public String[] getAnncmtRecord(String program) throws SQLException{
+    public String[][] getAnncmtRecord(String program) throws SQLException{
         
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
-        String[] anncmtRecord = new String[3];     
-        String sql = "select * from announcement where program = '" + program + "'" ;
+        String sql = "select * from announcement where program = '" + program + "' and startDate <= CURRENT DATE and endDate >= CURRENT DATE";
         
         try {
             ResultSet rs = stmt.executeQuery(sql);
+            rs.last();
+            int numOfRows = rs.getRow();
+            rs.beforeFirst();
+            String[][] anncmtRecord = new String[numOfRows][5];   
             while (rs.next()){
                 for (int i =0; i < anncmtRecord.length; i++){
+                    for (int j = 0; j< anncmtRecord[i].length; j++){
                     
-                    anncmtRecord[i] = rs.getString(i+1);
+                    anncmtRecord[i][j] = rs.getString(j+1);
+                    }
+                rs.next();
                 }
             }
-            System.out.println("Succesfully get an annoucement record");
+            System.out.println("Succesfully get all annoucement records for program: " + program );
+            return anncmtRecord;
  
         } catch (SQLException ex) {
-            System.out.println("Failed to get a new announcement record");
+            System.out.println("Failed to get announcement records for program: " + program);
             ex.printStackTrace();
         } finally{
             stmt.close();
         }
-
-        return anncmtRecord;    
-    
+        return null;    
     }   
 }

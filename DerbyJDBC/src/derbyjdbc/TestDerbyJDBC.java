@@ -32,7 +32,7 @@ public class TestDerbyJDBC {
     
     //db.addVisit(1, "Ask for help");
     //db.addVisit(2, "Ask for test");
-    String[][] visit = db.getVisitRecord("2014-11-10");
+    String[][] visit = db.getVisitRecord("2014-11-12");
     for (int i = 0; i<visit.length;i++){
         for (int j=0; j<visit[i].length;j++){
     
@@ -45,27 +45,29 @@ public class TestDerbyJDBC {
     
     
     
-    //db.addNewAnncmt(program, "Please do not skip classes!","2014-10-01","2014-11-01");
-    //String[] anncmt = db.getAnncmtRecord(program);
+    db.addNewAnncmt(program, "Please do not skip classes!","2014-10-01","2014-11-18");
+    db.addNewAnncmt(program, "Please submit telecom assignment!","2014-10-15","2014-11-20");
+    String[][] anncmt = db.getAnncmtRecord(program);
     
+    for (int i = 0; i<anncmt.length;i++){
+        for (int j=0; j<anncmt[i].length;j++){
     
-    
-    //for (int i = 0; i<anncmt.length;i++){
-    
-      //  System.out.println(anncmt[i]);
-    //}
- 
+        System.out.println(anncmt[i][j]);
+        }
+        
+        System.out.println();
+    }
     db.addNewStudent(firstName, lastName, gender, program, DOB, photo);
     
-    String[] s = db.getStudentRecord(1);
+    String[] s = db.getStudentRecord("1");
     for (int i = 0; i<s.length;i++){
     
         System.out.println(s[i]);
     }
     
-    db.updateStudentRecord(1);
+    db.updateStudentRecord("1");
     
-    s = db.getStudentRecord(1);
+    s = db.getStudentRecord("1");
     for (int i = 0; i<s.length;i++){
     
         System.out.println(s[i]); 
