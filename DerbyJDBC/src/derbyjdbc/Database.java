@@ -8,6 +8,7 @@ package derbyjdbc;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 
 
@@ -160,10 +161,12 @@ public class Database {
                 
                 
                 stmt.executeUpdate(sql);
+                System.out.println("Succesfully update a student record");
             }
             
             
         } catch (SQLException ex) {
+            System.out.println("Failed to update a student record");
             ex.printStackTrace();
         } finally{
             stmt.close();
@@ -197,31 +200,34 @@ public class Database {
      * @return
      * @throws SQLException 
      */
-    public String[] getVisitRecord(String visitDate) throws SQLException{
+    public String[][] getVisitRecord(String visitDate) throws SQLException{
         
-        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
-        String[] visitRecord = new String[3];    
+        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);   
         String sql = "select * from visit where visitDate = '" + visitDate +"'" ;
-        
-        try {
+
             ResultSet rs = stmt.executeQuery(sql);
+            if (!rs.next()){
+             System.out.println("No visit record on " + visitDate); 
+             String[][] noVisitRecord = new String[][]{{"No visit record on " + visitDate}};
+             stmt.close();
+             return noVisitRecord;
+            }
+            else {
+            rs.last();
+            int numOfRows = rs.getRow();
+            rs.beforeFirst();
+            String[][] visitRecord = new String[numOfRows][3];  
             while (rs.next()){
-                for (int i =0; i < visitRecord.length; i++){
-                    
-                    visitRecord[i] = rs.getString(i+1);
+               for (int i =0; i < visitRecord.length; i++){
+                   for (int j =0; j<visitRecord[i].length; j++)
+                    visitRecord[i][j] = rs.getString(j+1);
                 }
             }
-            System.out.println("Succesfully get a visit record");
- 
-        } catch (SQLException ex) {
-            System.out.println("Failed to get a new visit record");
-            ex.printStackTrace();
-        } finally{
+            System.out.println("Succesfully get all visit records on " + visitDate); 
             stmt.close();
-        }
-
-        return visitRecord;    
-    
+            return visitRecord;
+            }
+   
     }  
     
     /**

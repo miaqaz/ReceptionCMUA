@@ -30,25 +30,30 @@ public class TestDerbyJDBC {
     String DOB = "1990-10-27";
     String photo = "abc.jepg";
     
-    db.addVisit(1, "Ask for help");
-    String[] visit = db.getVisitRecord("2014-11-06");
+    //db.addVisit(1, "Ask for help");
+    //db.addVisit(2, "Ask for test");
+    String[][] visit = db.getVisitRecord("2014-11-10");
     for (int i = 0; i<visit.length;i++){
+        for (int j=0; j<visit[i].length;j++){
     
-        System.out.println(visit[i]);
+        System.out.println(visit[i][j]);
+        }
+        
+        System.out.println();
     }
     
     
     
     
-    db.addNewAnncmt(program, "Please do not skip classes!","2014-10-01","2014-11-01");
-    String[] anncmt = db.getAnncmtRecord(program);
+    //db.addNewAnncmt(program, "Please do not skip classes!","2014-10-01","2014-11-01");
+    //String[] anncmt = db.getAnncmtRecord(program);
     
     
     
-    for (int i = 0; i<anncmt.length;i++){
+    //for (int i = 0; i<anncmt.length;i++){
     
-        System.out.println(anncmt[i]);
-    }
+      //  System.out.println(anncmt[i]);
+    //}
  
     db.addNewStudent(firstName, lastName, gender, program, DOB, photo);
     
