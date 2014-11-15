@@ -82,7 +82,7 @@ public class Database {
             int numOfVisit = 1;
             
             String sql = "insert into student " 
-                    + "values(" + id + ",'" + firstName + "','"+ lastName + "','" + gender + "','" + program
+                    + "values(" + id + ",'" + firstName.toUpperCase() + "','"+ lastName.toUpperCase() + "','" + gender.toUpperCase() + "','" + program.toUpperCase()
                     + "','" + DOB+ "','"+ lastVisit+ "',"+ numOfVisit + ",'" + photo + "')";
          
                 stmt.executeUpdate(sql);
@@ -214,11 +214,12 @@ public class Database {
     /**
      * add new visit event
      * 
-     * @param id student id
+     * @param stringId student id
      * @param reason 
      * @throws java.sql.SQLException 
      */
-    public void addVisit(int id, String reason ) throws SQLException {
+    public void addVisit(String stringId, String reason ) throws SQLException {
+        int id = Integer.parseInt(stringId);
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date currentDate = new java.util.Date();
@@ -237,7 +238,7 @@ public class Database {
      * @return null if no record found or all visit records on that date in the order of: id, visitDate, Reason
      * @throws SQLException 
      */
-    public String[][] getVisitRecord(String visitDate) throws SQLException {
+    public String[][] getVisitRecordbyDate(String visitDate) throws SQLException {
         
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         String sql = "select * from visit where visitDate = '" + visitDate +"'" ;
@@ -269,6 +270,38 @@ public class Database {
         return null;
     }
    
+    /**
+     * Get visit record by visit date
+     * 
+     * @param stringId
+     * @return null if no record found or all visit records on that date in the order of: id, visitDate, Reason
+     * @throws SQLException 
+     */
+    public String[] getLastVisitRecordbySID(String stringId) throws SQLException {
+        
+        int id = Integer.parseInt(stringId);
+        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        String sql = "select * from visit where id = " + id + "" ;
+        
+        try {   
+             ResultSet rs = stmt.executeQuery(sql); 
+             rs.last();
+             String[] visitRecord = new String[3];
+                 for (int i =0; i < visitRecord.length; i++){                     
+                         visitRecord[i] = rs.getString(i+1);
+                 }
+             System.out.println("Succesfully get last visit record"); 
+             return visitRecord;
+             
+         } catch (SQLException ex) {
+             System.out.println("Failed to get last visit records");
+             ex.printStackTrace();
+         } finally {
+            stmt.close();
+        }
+ 
+        return null;
+    }
     
     
     /**
@@ -307,6 +340,7 @@ public class Database {
             stmt.close();
         }
     }
+    
     
     
     /**
