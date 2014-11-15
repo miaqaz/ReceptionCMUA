@@ -96,6 +96,41 @@ public class Database {
         }
     }
     
+    /**
+     * Get a newly add student
+     * 
+     * @param stringId
+     * @return null if no record found or a student record in the following order: id, firstName, lastName,
+     *          gender, program, DOB, lastVisit, numOfVisit, photo
+     * @throws java.sql.SQLException
+     */
+    public String[] getLastStudentRecord() throws SQLException{
+        
+        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);  
+        String[] studentRecord = new String[9];  
+        String sql = "select * from student";
+        
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            rs.last();
+            
+                
+                for (int i =0; i < studentRecord.length; i++){
+                    
+                    studentRecord[i] = rs.getString(i+1);
+                }
+            
+            System.out.println("Succesfully get a newly add student record");
+            return studentRecord;   
+        } catch (SQLException ex) {
+            System.out.println("Failed to get a newly add student record");
+            ex.printStackTrace();
+        } finally{
+            stmt.close();
+        }
+        return null;        
+    }   
+    
     
     /**
      * Get a string record of a student by student id

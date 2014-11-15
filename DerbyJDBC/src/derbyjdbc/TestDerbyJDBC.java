@@ -30,6 +30,11 @@ public class TestDerbyJDBC {
     String DOB = "1990-10-27";
     String photo = "abc.jepg";
     
+    String[] newstudent = db.getLastStudentRecord();
+    
+    for (int i=0; i < newstudent.length; i++ ){
+        System.out.println(newstudent[i]);
+    }
     //db.addVisit(1, "Ask for help");
     //db.addVisit(2, "Ask for test");
     String[][] visit = db.getVisitRecord("2014-11-12");
