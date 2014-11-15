@@ -82,7 +82,7 @@ public class Database {
             int numOfVisit = 1;
             
             String sql = "insert into student " 
-                    + "values(" + id + ",'" + firstName.toUpperCase() + "','"+ lastName.toUpperCase() + "','" + gender.toUpperCase() + "','" + program.toUpperCase()
+                    + "values(" + id + ",'" + firstName + "','"+ lastName + "','" + gender + "','" + program
                     + "','" + DOB+ "','"+ lastVisit+ "',"+ numOfVisit + ",'" + photo + "')";
          
                 stmt.executeUpdate(sql);
@@ -214,12 +214,11 @@ public class Database {
     /**
      * add new visit event
      * 
-     * @param stringId student id
+     * @param id student id
      * @param reason 
      * @throws java.sql.SQLException 
      */
-    public void addVisit(String stringId, String reason ) throws SQLException {
-        int id = Integer.parseInt(stringId);
+    public void addVisit(int id, String reason ) throws SQLException {
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         java.util.Date currentDate = new java.util.Date();
@@ -234,14 +233,15 @@ public class Database {
     /**
      * Get visit record by visit date
      * 
-     * @param visitDate
+     * @param startDate
+     * @param endDate
      * @return null if no record found or all visit records on that date in the order of: id, visitDate, Reason
      * @throws SQLException 
      */
-    public String[][] getVisitRecordbyDate(String visitDate) throws SQLException {
+    public String[][] getVisitRecordbyDate(String startDate,String endDate) throws SQLException {
         
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        String sql = "select * from visit where visitDate = '" + visitDate +"'" ;
+        String sql = "select * from visit where visitDate >= '" + startDate +"' and visitDate <= '"+ endDate +"'";
         
         try {   
              ResultSet rs = stmt.executeQuery(sql); 
@@ -257,11 +257,11 @@ public class Database {
                 rs.next();
              }
              }
-             System.out.println("Succesfully get all visit records on " + visitDate); 
+             System.out.println("Succesfully get all visit records between " + startDate + " and " + endDate); 
              return visitRecord;
              
          } catch (SQLException ex) {
-             System.out.println("Failed to get visit records on " + visitDate);
+             System.out.println("Failed to get visit records between " + startDate + " and " + endDate);
              ex.printStackTrace();
          } finally {
             stmt.close();
@@ -270,31 +270,42 @@ public class Database {
         return null;
     }
    
+    
+    
     /**
      * Get visit record by visit date
      * 
-     * @param stringId
+     * @param startDate
+     * @param endDate
      * @return null if no record found or all visit records on that date in the order of: id, visitDate, Reason
      * @throws SQLException 
      */
-    public String[] getLastVisitRecordbySID(String stringId) throws SQLException {
+    public String[][] getVisitRecordbyDateGender(String startDate,String endDate,String gender) throws SQLException {
         
-        int id = Integer.parseInt(stringId);
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        String sql = "select * from visit where id = " + id + "" ;
+        String sql = "select visit.reason, count(*) from visit inner join student on visit.id = student.id "
+                + "where gender ='"+gender.toUpperCase()+"' and visitDate >= '" + startDate +
+                "' and visitDate <= '"+ endDate +"'group by reason";
         
         try {   
              ResultSet rs = stmt.executeQuery(sql); 
              rs.last();
-             String[] visitRecord = new String[3];
-                 for (int i =0; i < visitRecord.length; i++){                     
-                         visitRecord[i] = rs.getString(i+1);
+             int numOfRows = rs.getRow();
+             rs.beforeFirst();
+             String[][] visitRecord = new String[numOfRows][2];
+             while (rs.next()){
+                 for (int i =0; i < visitRecord.length; i++){
+                     for (int j =0; j < visitRecord[i].length; j++){
+                         visitRecord[i][j] = rs.getString(j+1);
                  }
-             System.out.println("Succesfully get last visit record"); 
+                rs.next();
+             }
+             }
+             System.out.println("Succesfully get visit frequency by gender between " + startDate + " and " + endDate); 
              return visitRecord;
              
          } catch (SQLException ex) {
-             System.out.println("Failed to get last visit records");
+             System.out.println("Failed to get visit frequency by gender between " + startDate + " and " + endDate);
              ex.printStackTrace();
          } finally {
             stmt.close();
@@ -302,6 +313,7 @@ public class Database {
  
         return null;
     }
+   
     
     
     /**
@@ -340,8 +352,6 @@ public class Database {
             stmt.close();
         }
     }
-    
-    
     
     /**
      * Get a string record of announcement records by program

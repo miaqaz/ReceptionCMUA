@@ -29,22 +29,22 @@ public class TestDerbyJDBC {
     String program = "MISM";
     String DOB = "1990-10-27";
     String photo = "abc.jepg";
+    String startDate ="2014-11-01";
+    String endDate = "2014-12-01";
+    
+    String[][] frequency = db.getVisitRecordbyDateGender(startDate, endDate, gender);
+    for (int i =0; i<frequency.length;i++){
+        for (int j=0; j<frequency[i].length;j++){
+        
+            System.out.println(frequency[i][j]);
+        }
+    
+    }
     
     String[] newstudent = db.getLastStudentRecord();
     
     for (int i=0; i < newstudent.length; i++ ){
         System.out.println(newstudent[i]);
-    }
-    //db.addVisit(1, "Ask for help");
-    //db.addVisit(2, "Ask for test");
-    String[][] visit = db.getVisitRecord("2014-11-12");
-    for (int i = 0; i<visit.length;i++){
-        for (int j=0; j<visit[i].length;j++){
-    
-        System.out.println(visit[i][j]);
-        }
-        
-        System.out.println();
     }
     
     
